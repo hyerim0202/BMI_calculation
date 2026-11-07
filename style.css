@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+/* 🎀 색상 모음 */
+:root{
+  --pink-50:  #fff5f9;
+  --pink-100: #ffe3ee;
+  --pink-200: #ffc8dd;
+  --pink-400: #ff7eb3;
+  --pink-500: #ff5c9a;
+  --pink-700: #d63a7a;
+  --text:     #8a3a5c;
+
+  /* 바 구간 색 */
+  --under:  #ffe4ef;
+  --normal: #ffc7dd;
+  --over:   #ff9ec6;
+  --obese:  #ff5c9a;
+}
+
+*{ box-sizing: border-box; }
+
+/* 땡땡이 배경 */
+html{
+  min-height: 100%;
+  background-color: var(--pink-50);
+  background-image: radial-gradient(var(--pink-200) 2px, transparent 2.5px);
+  background-size: 24px 24px;
+}
+
+/* 하얀 카드 */
+body{
+  width: min(440px, calc(100% - 32px));
+  margin: 48px auto;
+  padding: 32px 28px 36px;
+  background: #fff;
+  border: 3px solid var(--pink-200);
+  border-radius: 32px;
+  box-shadow: 0 10px 0 var(--pink-200), 0 22px 40px rgba(255, 92, 154, 0.2);
+  font-family: 'Jua', sans-serif;
+  color: var(--text);
+  text-align: center;
+}
+
+h1, h2, h3{ font-weight: normal; }
+
+/* 제목 */
+h1{
+  margin: 0 0 26px;
+  font-size: 32px;
+  color: var(--pink-500);
+  text-shadow: 3px 3px 0 var(--pink-100);
+}
+h1::before{ content: "🎀 "; }
+h1::after { content: " ♡"; }
+
+/* 입력칸 */
+body > div:not(#bmi-box){
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+label{
+  display: block;
+  margin: 0 0 6px 8px;
+  font-size: 16px;
+  color: var(--pink-700);
+}
+label::before{
+  content: "♥ ";
+  color: var(--pink-400);
+}
+
+input{
+  width: 100%;
+  padding: 14px 20px;
+  border: 2px solid var(--pink-200);
+  border-radius: 999px;
+  background: var(--pink-50);
+  font-family: inherit;
+  font-size: 17px;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+input::placeholder{ color: #e8a9c2; }
+input:focus{
+  border-color: var(--pink-400);
+  background: #fff;
+  box-shadow: 0 0 0 5px var(--pink-100);
+}
+
+/* 버튼 (눌리는 느낌) */
+button{
+  width: 100%;
+  margin-top: 8px;
+  padding: 15px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--pink-400), var(--pink-500));
+  color: #fff;
+  font-family: inherit;
+  font-size: 19px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 var(--pink-700);
+  transition: transform .1s, box-shadow .1s, filter .2s;
+}
+button::after{ content: " ✨"; }
+button:hover{ filter: brightness(1.06); }
+button:active{
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--pink-700);
+}
+
+/* 결과 (계산 전엔 숨김) */
+#result:empty,
+#state:empty{ display: none; }
+
+#result{
+  margin: 34px 0 10px;
+  font-size: 30px;
+  color: var(--pink-700);
+}
+
+#state{
+  display: inline-block;
+  margin: 0;
+  padding: 6px 24px;
+  border-radius: 999px;
+  font-size: 20px;
+  background: var(--pink-500);
+  color: #fff;
+  box-shadow: 0 4px 0 rgba(214, 58, 122, 0.25);
+}
+body[data-level="under"]  #state{ background: var(--under);  color: var(--pink-700); }
+body[data-level="normal"] #state{ background: var(--normal); color: var(--pink-700); }
+body[data-level="over"]   #state{ background: var(--over);   color: #fff; }
+body[data-level="obese"]  #state{ background: var(--obese);  color: #fff; }
+
+/* ===== BMI 바 ===== */
+#bmi-box{
+  display: none;            /* 계산 전엔 숨김 */
+  position: relative;
+  margin-top: 24px;
+  padding-top: 42px;        /* 하트 들어갈 자리 */
+  animation: pop .5s cubic-bezier(.34, 1.56, .64, 1);
+}
+body[data-level] #bmi-box{ display: block; }
+
+.bar{
+  display: flex;
+  height: 52px;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--pink-200), 0 10px 18px rgba(255, 92, 154, 0.2);
+}
+
+.seg{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: font-size .3s;
+}
+.under { width: 25%; background-color: var(--under);  color: var(--pink-700); }
+.normal{ width: 20%; background-color: var(--normal); color: var(--pink-700); }
+.over  { width: 20%; background-color: var(--over);   color: #fff; text-shadow: 0 1px 2px rgba(180, 30, 90, .35); }
+.obese { width: 35%; background-color: var(--obese);  color: #fff; text-shadow: 0 1px 2px rgba(180, 30, 90, .35); }
+
+/* 내 구간에 사탕 줄무늬 */
+body[data-level="under"]  .under,
+body[data-level="normal"] .normal,
+body[data-level="over"]   .over,
+body[data-level="obese"]  .obese{
+  background-image: repeating-linear-gradient(-45deg, rgba(255, 255, 255, .45) 0 8px, transparent 8px 16px);
+  font-size: 17px;
+}
+
+/* 하트 화살표 */
+#marker{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  font-family: Arial, sans-serif;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--pink-500);
+  text-shadow:
+    -2px 0 #fff, 2px 0 #fff, 0 -2px #fff, 0 2px #fff,
+    0 5px 8px rgba(214, 58, 122, .35);
+  transform: translateX(-50%);
+  transition: left .7s cubic-bezier(.34, 1.56, .64, 1);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+/* 아래 숫자 */
+.nums{
+  position: relative;
+  height: 26px;
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--pink-700);
+}
+.nums span{
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+}
+.n1{ left: 25%; }
+.n2{ left: 45%; }
+.n3{ left: 65%; }
+
+/* 애니메이션 */
+@keyframes bounce{
+  0%, 100%{ transform: translateX(-50%) translateY(0); }
+  50%     { transform: translateX(-50%) translateY(-6px); }
+}
+@keyframes pop{
+  from{ opacity: 0; transform: scale(.92) translateY(10px); }
+  to  { opacity: 1; transform: none; }
+}
